@@ -2,6 +2,33 @@
 main:
   - title: "Quick-Start Guide"
     url: https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/
+  - title: "Retro"
+    sub_links:
+      - title: "Guides"
+        url: "https://juken77.github.io/minimal-mistakes-blogtest/power_list/"
+      - title: "Powa-List"
+        url: "https://juken77.github.io/minimal-mistakes-blogtest/power_retro_list/"
+  - title: "Retro2"
+    children:
+      - child: "Guides2"
+        child_url: "https://juken77.github.io/minimal-mistakes-blogtest/power_list/"
+      - child: "Powa-List2"
+        child_url: "https://juken77.github.io/minimal-mistakes-blogtest/power_retro_list/"
+
+  - title: "Retro3"
+    children:
+      - title: "Guides3"
+        url: "https://juken77.github.io/minimal-mistakes-blogtest/power_list/"
+      - title: "Powa-List3"
+        url: "https://juken77.github.io/minimal-mistakes-blogtest/power_retro_list/"
+
+  - title: "Retro4"
+    children:
+      - child: "Guides4"
+        url: "https://juken77.github.io/minimal-mistakes-blogtest/power_list/"
+      - child: "Powa-List4"
+        url: "https://juken77.github.io/minimal-mistakes-blogtest/power_retro_list/"
+
   # - title: "About"
   #   url: https://mmistakes.github.io/minimal-mistakes/about/
   # - title: "Sample Posts"
