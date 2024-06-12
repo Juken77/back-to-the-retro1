@@ -14,11 +14,24 @@
         <ul class="visible-links">
           {%- for link in site.data.navigation.main -%}
             <li class="masthead__menu-item">
-              <a
-                href="{{ link.url | relative_url }}"
-                {% if link.description %} title="{{ link.description }}"{% endif %}
-                {% if link.target %} target="{{ link.target }}"{% endif %}
-              >{{ link.title }}</a>
+              {% if link.sub_links %}
+                <!-- If link has sub-links, create a dropdown menu -->
+                <a href="#" class="submenu-link">{{ link.title }}</a>
+                <button class="submenu-toggle" aria-expanded="false">+</button>
+                <ul class="submenu">
+                  {% for sub_link in link.sub_links %}
+                    <li>
+                      <a href="{{ sub_link.url | relative_url }}">{{ sub_link.title }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <a
+                  href="{{ link.url | relative_url }}"
+                  {% if link.description %} title="{{ link.description }}"{% endif %}
+                  {% if link.target %} target="{{ link.target }}"{% endif %}
+                >{{ link.title }}</a>
+              {% endif %}
             </li>
           {%- endfor -%}
         </ul>
@@ -37,3 +50,118 @@
     </div>
   </div>
 </div>
+
+<!-- JavaScript to handle submenu toggle -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var submenuToggles = document.querySelectorAll('.submenu-toggle');
+    var submenuLinks = document.querySelectorAll('.submenu-link');
+
+    submenuToggles.forEach(function(toggle) {
+      toggle.addEventListener('click', function(event) {
+        event.preventDefault();
+        var isExpanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', !isExpanded);
+        var submenu = this.nextElementSibling;
+        if (!isExpanded) {
+          submenu.style.display = 'block';
+        } else {
+          submenu.style.display = 'none';
+        }
+      });
+    });
+
+    submenuLinks.forEach(function(link) {
+      link.addEventListener('click', function(event) {
+        event.preventDefault();
+        var toggle = this.nextElementSibling;
+        var isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', !isExpanded);
+        var submenu = toggle.nextElementSibling;
+        if (!isExpanded) {
+          submenu.style.display = 'block';
+        } else {
+          submenu.style.display = 'none';
+        }
+      });
+    });
+
+    document.addEventListener('click', function(event) {
+      var isClickInside = document.querySelector('.masthead').contains(event.target);
+
+      if (!isClickInside) {
+        submenuToggles.forEach(function(toggle) {
+          toggle.setAttribute('aria-expanded', 'false');
+          toggle.nextElementSibling.style.display = 'none';
+        });
+      }
+    });
+  });
+</script>
+
+<!-- CSS to style the dropdowns -->
+<style>
+  .masthead__menu-item {
+    position: relative;
+  }
+
+  .submenu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    min-width: 200px; /* Ensures minimum width */
+  }
+
+  .submenu li {
+    width: 100%; /* Ensures full width for each item */
+  }
+
+  .submenu a {
+    padding: 10px;
+    display: block;
+    white-space: nowrap; /* Prevents text from wrapping */
+  }
+
+  .masthead__menu-item:hover .submenu,
+  .masthead__menu-item .submenu-toggle[aria-expanded="true"] + .submenu {
+    display: block;
+    position: absolute; /* Keeps it absolutely positioned for desktop */
+    top: 100%;
+    left: 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  }
+
+  .submenu-toggle {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .visible-links {
+      flex-direction: column;
+    }
+
+    .submenu-toggle {
+      display: inline-block;
+    }
+
+    .submenu {
+      display: none;
+      position: relative; /* Changes to relative positioning for mobile */
+      box-shadow: none;
+      width: 100%; /* Ensures it takes full width in mobile view */
+    }
+
+    .masthead__menu-item .submenu-toggle[aria-expanded="true"] + .submenu {
+      display: block;
+      position: relative; /* Changes to relative positioning for mobile */
+      top: auto;
+      left: auto;
+    }
+  }
+</style>
